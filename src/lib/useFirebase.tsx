@@ -30,6 +30,8 @@ export const FirebaseProvider: React.FC<{
       <FirebaseAuthConsumer>
         {(firebaseProps: FirebaseAuthProviderState) => {
           const { providerId } = firebaseProps;
+          // 1. Before/during auth, providerId === null
+          // 2. After auth, providerId === string
           if (providerId == null) return <div>Loading...</div>;
           return (
             <FirebaseContext.Provider value={firebaseProps}>
