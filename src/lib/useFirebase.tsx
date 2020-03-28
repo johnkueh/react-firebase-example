@@ -6,7 +6,7 @@ import { FirebaseAuthProviderState } from "@react-firebase/auth/dist/types";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 
 interface FirebaseConfig {
   authDomain: string;
@@ -19,13 +19,28 @@ interface FirebaseConfig {
   measurementId?: string;
 }
 
-const FirebaseContext = React.createContext<Partial<FirebaseAuthProviderState>>(
-  {}
-);
+interface CollectionsMap {
+  [key: string]: {
+    loading: boolean;
+    data: any;
+  };
+}
+
+const FirebaseContext = React.createContext<
+  Partial<FirebaseAuthProviderState> & {
+    dispatch: any;
+    collections: Partial<CollectionsMap>;
+  }
+>({
+  dispatch: () => {},
+  collections: {}
+});
 
 export const FirebaseProvider: React.FC<{
   config: FirebaseConfig;
 }> = ({ config, children }) => {
+  const [collectionsMap, dispatch] = useReducer(reducer, {});
+
   return (
     <FirebaseAuthProvider firebase={firebase} {...config}>
       <FirebaseAuthConsumer>
@@ -34,8 +49,15 @@ export const FirebaseProvider: React.FC<{
           // 1. Before/during auth, providerId === null
           // 2. After auth, providerId === string
           if (providerId == null) return <div>Loading...</div>;
+
           return (
-            <FirebaseContext.Provider value={firebaseProps}>
+            <FirebaseContext.Provider
+              value={{
+                ...firebaseProps,
+                dispatch,
+                collections: collectionsMap
+              }}
+            >
               {children}
             </FirebaseContext.Provider>
           );
@@ -56,24 +78,88 @@ export const fetchCollection = async (name: string, firebase: any) => {
   return collection;
 };
 
-export const useCollection = (name: string) => {
+export const useAddDocument = (collection: string) => {
+  const { firebase, dispatch } = useFirebase();
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const { firebase } = useFirebase();
+  const db = firebase.firestore();
+  const add = async (values: any) => {
+    setLoading(true);
+    try {
+      const data = await db.collection(collection).add(values);
+      dispatch({
+        type: "FETCH_COLLECTION_START",
+        name: collection
+      });
+      const collectionData = await fetchCollection(collection, firebase);
+      dispatch({
+        type: "FETCH_COLLECTION_END",
+        name: collection,
+        data: collectionData
+      });
+      setLoading(false);
+      return data;
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    }
+  };
+
+  return { add, loading };
+};
+
+export const useCollection = (name: string) => {
+  const { firebase, dispatch, collections } = useFirebase();
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      dispatch({
+        type: "FETCH_COLLECTION_START",
+        name
+      });
       const fetchedCollection = await fetchCollection(name, firebase);
-      setData(fetchedCollection);
-      setLoading(false);
+      dispatch({
+        type: "FETCH_COLLECTION_END",
+        name,
+        data: fetchedCollection
+      });
     };
 
     fetchData();
-  }, [firebase, name]);
+  }, [firebase, dispatch, name]);
 
-  return {
-    loading,
-    data
-  };
+  return collections[name] || { loading: null, data: null };
 };
+
+type Action =
+  | {
+      type: "FETCH_COLLECTION_START";
+      name: string;
+    }
+  | {
+      type: "FETCH_COLLECTION_END";
+      name: string;
+      data: any;
+    };
+
+function reducer(state: CollectionsMap, action: Action) {
+  switch (action.type) {
+    case "FETCH_COLLECTION_START":
+      const collection = state[action.name] || { loading: null, data: null };
+
+      return {
+        ...state,
+        [action.name]: {
+          loading: true,
+          data: collection.data
+        }
+      };
+    case "FETCH_COLLECTION_END":
+      return {
+        ...state,
+        [action.name]: {
+          loading: false,
+          data: action.data
+        }
+      };
+  }
+}

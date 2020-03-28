@@ -1,19 +1,19 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import AddProject from "../components/AddProject";
 import { useCollection, useFirebase } from "../lib/useFirebase";
 
 interface Props {}
 
 const Dashboard: React.FC<Props> = () => {
   const { firebase } = useFirebase();
-  const { loading, data } = useCollection("projects");
+  const { data } = useCollection("projects");
   const history = useHistory();
-
-  if (loading) return <div>Loading projects...</div>;
+  if (data == null) return <div>Loading projects...</div>;
 
   return (
     <>
-      <h3>Projects</h3>
+      <h3>All projects</h3>
       <div>
         {data.map((project: any) => (
           <div key={project.id}>
@@ -22,7 +22,9 @@ const Dashboard: React.FC<Props> = () => {
             <hr />
           </div>
         ))}
+        <AddProject />
       </div>
+      <hr />
       <button
         onClick={async e => {
           e.preventDefault();

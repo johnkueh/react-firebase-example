@@ -12,10 +12,17 @@ export const useForm = (defaultValues: State) => {
     },
     [dispatch]
   );
+  const reset = useCallback(() => {
+    dispatch({
+      type: "reset",
+      defaultValues
+    });
+  }, [dispatch, defaultValues]);
 
   return {
     currentValues,
-    handleChange
+    handleChange,
+    reset
   };
 };
 
@@ -23,11 +30,16 @@ type State = {
   [key: string]: string;
 };
 
-type Action = {
-  type: "change";
-  key: string;
-  value: string;
-};
+type Action =
+  | {
+      type: "change";
+      key: string;
+      value: string;
+    }
+  | {
+      type: "reset";
+      defaultValues: any;
+    };
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
@@ -36,5 +48,7 @@ function reducer(state: State, action: Action) {
         ...state,
         [action.key]: action.value
       };
+    case "reset":
+      return action.defaultValues;
   }
 }
