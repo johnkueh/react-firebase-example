@@ -1,4 +1,4 @@
-## Example of modern Firebase usage with React
+## Example of Firebase usage with modern, idiomatic React
 
 ### useFirebase hook
 
