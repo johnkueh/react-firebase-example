@@ -1,9 +1,12 @@
-import React from "react";
+import firebase from "firebase/app";
+import React, { useState } from "react";
 import { useForm } from "../lib/useForm";
 
 interface Props {}
 
 const Signup: React.FC<Props> = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const { currentValues, handleChange } = useForm({
     email: "",
     password: ""
@@ -12,10 +15,22 @@ const Signup: React.FC<Props> = () => {
   return (
     <>
       <h2>Signup</h2>
+      {error && <div style={{ color: "red" }}>{error}</div>}
       <form
-        onSubmit={e => {
+        onSubmit={async e => {
           e.preventDefault();
-          console.log(currentValues);
+          setLoading(true);
+          setError(null);
+          const { email, password } = currentValues;
+          try {
+            const result = await firebase
+              .auth()
+              .createUserWithEmailAndPassword(email, password);
+            console.log(result);
+          } catch (e) {
+            setError(e.message);
+          }
+          setLoading(false);
         }}
       >
         <input
@@ -32,7 +47,9 @@ const Signup: React.FC<Props> = () => {
           name="password"
           type="password"
         />
-        <button type="submit">Submit</button>
+        <button disabled={loading} type="submit">
+          {loading ? "Loading..." : "Submit"}
+        </button>
       </form>
     </>
   );
