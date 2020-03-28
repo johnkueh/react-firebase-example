@@ -6,15 +6,27 @@ import { FirebaseAuthProviderState } from "@react-firebase/auth/dist/types";
 import firebase from "firebase/app";
 import "firebase/auth";
 import React, { useContext } from "react";
-import { firebaseConfig } from "./firebase";
+
+interface FirebaseConfig {
+  authDomain: string;
+  apiKey: string;
+  databaseURL: string;
+  projectId: string;
+  messagingSenderId?: string;
+  storageBucket?: string;
+  appId?: string;
+  measurementId?: string;
+}
 
 const FirebaseContext = React.createContext<Partial<FirebaseAuthProviderState>>(
   {}
 );
 
-export const FirebaseProvider: React.FC = ({ children }) => {
+export const FirebaseProvider: React.FC<{
+  config: FirebaseConfig;
+}> = ({ config, children }) => {
   return (
-    <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
+    <FirebaseAuthProvider firebase={firebase} {...config}>
       <FirebaseAuthConsumer>
         {(firebaseProps: FirebaseAuthProviderState) => {
           const { providerId } = firebaseProps;

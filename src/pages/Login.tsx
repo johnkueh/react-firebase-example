@@ -29,10 +29,7 @@ const Login: React.FC<Props> = () => {
           setError(null);
           const { email, password } = currentValues;
           try {
-            const result = await firebase
-              .auth()
-              .signInWithEmailAndPassword(email, password);
-            console.log(result);
+            await firebase.auth().signInWithEmailAndPassword(email, password);
           } catch (e) {
             console.log(e);
             setError(e.message);

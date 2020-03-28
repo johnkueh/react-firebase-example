@@ -29,10 +29,9 @@ const Signup: React.FC<Props> = () => {
           setError(null);
           const { email, password } = currentValues;
           try {
-            const result = await firebase
+            await firebase
               .auth()
               .createUserWithEmailAndPassword(email, password);
-            console.log(result);
           } catch (e) {
             setError(e.message);
           }
