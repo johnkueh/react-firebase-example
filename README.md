@@ -1,5 +1,11 @@
 ## Example of Firebase usage with modern, idiomatic React
 
+- [useFirebase](https://github.com/johnkueh/react-firebase-example/blob/master/src/lib/useFirebase.tsx) hook
+- [useForm](https://github.com/johnkueh/react-firebase-example/blob/master/src/lib/useForm.ts) hook
+- [Example usage](https://github.com/johnkueh/react-firebase-example/blob/master/src/pages/Signup.tsx)
+
+![Auth Preview](/public/auth-preview.gif)
+
 ### useFirebase hook
 
 1. First, wrap your app with `FirebaseProvider`
