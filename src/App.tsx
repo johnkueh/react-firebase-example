@@ -1,6 +1,6 @@
 import "firebase/auth";
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { FirebaseProvider } from "./lib/useFirebase";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
@@ -11,6 +11,7 @@ function App() {
     <FirebaseProvider>
       <BrowserRouter>
         <Switch>
+          <Redirect exact from="/" to="/dashboard" />
           <Route path="/signup" component={Signup} />
           <Route path="/login" component={Login} />
           <Route path="/dashboard" component={Dashboard} />

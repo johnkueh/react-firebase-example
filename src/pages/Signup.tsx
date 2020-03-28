@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link, Redirect } from "react-router-dom";
 import { useFireBase } from "../lib/useFirebase";
 import { useForm } from "../lib/useForm";
 
@@ -13,7 +14,9 @@ const Signup: React.FC<Props> = () => {
     password: ""
   });
 
-  console.log(isSignedIn, firebase);
+  if (isSignedIn) {
+    return <Redirect to="/dashboard" />;
+  }
 
   return (
     <>
@@ -54,6 +57,9 @@ const Signup: React.FC<Props> = () => {
           {loading ? "Loading..." : "Submit"}
         </button>
       </form>
+      <div>
+        Have an acccount? <Link to="/login">Login</Link>
+      </div>
     </>
   );
 };

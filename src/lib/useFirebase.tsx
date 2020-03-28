@@ -2,24 +2,23 @@ import {
   FirebaseAuthConsumer,
   FirebaseAuthProvider
 } from "@react-firebase/auth";
+import { FirebaseAuthProviderState } from "@react-firebase/auth/dist/types";
 import firebase from "firebase/app";
 import "firebase/auth";
 import React, { useContext } from "react";
 import { firebaseConfig } from "./firebase";
 
-interface FirebaseProps {
-  isSignedIn: boolean;
-  user: any; // todo
-  firebase: any; // todo
-}
-
-const FirebaseContext = React.createContext<Partial<FirebaseProps>>({});
+const FirebaseContext = React.createContext<Partial<FirebaseAuthProviderState>>(
+  {}
+);
 
 export const FirebaseProvider: React.FC = ({ children }) => {
   return (
     <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
       <FirebaseAuthConsumer>
-        {(firebaseProps: FirebaseProps) => {
+        {(firebaseProps: FirebaseAuthProviderState) => {
+          const { providerId } = firebaseProps;
+          if (providerId == null) return <div>Loading...</div>;
           return (
             <FirebaseContext.Provider value={firebaseProps}>
               {children}
