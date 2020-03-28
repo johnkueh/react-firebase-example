@@ -3,6 +3,7 @@
 - [useFirebase](https://github.com/johnkueh/react-firebase-example/blob/master/src/lib/useFirebase.tsx) hook
 - [useForm](https://github.com/johnkueh/react-firebase-example/blob/master/src/lib/useForm.ts) hook
 - [Example usage](https://github.com/johnkueh/react-firebase-example/blob/master/src/pages/Signup.tsx)
+- [Fetching collection from Cloud Firestore](https://github.com/johnkueh/react-firebase-example/blob/feature/firestore/src/pages/Dashboard.tsx)
 
 ![Auth Preview](/public/auth-preview.gif)
 
