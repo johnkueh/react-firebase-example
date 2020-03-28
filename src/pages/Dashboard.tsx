@@ -1,11 +1,11 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { useCollection, useFireBase } from "../lib/useFirebase";
+import { useCollection, useFirebase } from "../lib/useFirebase";
 
 interface Props {}
 
 const Dashboard: React.FC<Props> = () => {
-  const { firebase } = useFireBase();
+  const { firebase } = useFirebase();
   const { loading, data } = useCollection("projects");
   const history = useHistory();
 
