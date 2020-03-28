@@ -5,6 +5,7 @@
     "packages/cloudfunctions-example"
   ],
   "scripts": {
-    "start:web": "yarn workspace react-firebase-example start"
+    "start:web": "yarn workspace react-firebase-example start",
+    "start:api": "yarn workspace cloudfunctions-example serve"
   }
 }
