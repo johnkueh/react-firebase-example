@@ -1,5 +1,7 @@
 import React from "react";
+import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
+import { fetchCollection } from "../lib/data";
 import { useFireBase } from "../lib/useFirebase";
 
 interface Props {}
@@ -8,12 +10,24 @@ const Dashboard: React.FC<Props> = () => {
   const { firebase } = useFireBase();
   const history = useHistory();
 
-  const db = firebase.firestore();
-  console.log(db);
+  const { isFetching, data } = useQuery("projects", async () => {
+    return fetchCollection("projects", firebase);
+  });
+
+  if (isFetching) return <div>Loading projects...</div>;
 
   return (
     <>
-      <div>Dashboard</div>
+      <h3>Projects</h3>
+      <div>
+        {data.map((project: any) => (
+          <div>
+            <div>{project.name}</div>
+            <div>{project.description}</div>
+            <hr />
+          </div>
+        ))}
+      </div>
       <button
         onClick={async e => {
           e.preventDefault();
