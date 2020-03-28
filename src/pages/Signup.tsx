@@ -1,16 +1,19 @@
-import firebase from "firebase/app";
 import React, { useState } from "react";
+import { useFireBase } from "../lib/useFirebase";
 import { useForm } from "../lib/useForm";
 
 interface Props {}
 
 const Signup: React.FC<Props> = () => {
+  const { isSignedIn, firebase } = useFireBase();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { currentValues, handleChange } = useForm({
     email: "",
     password: ""
   });
+
+  console.log(isSignedIn, firebase);
 
   return (
     <>
