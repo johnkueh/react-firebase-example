@@ -8,6 +8,9 @@ const Dashboard: React.FC<Props> = () => {
   const { firebase } = useFireBase();
   const history = useHistory();
 
+  const db = firebase.firestore();
+  console.log(db);
+
   return (
     <>
       <div>Dashboard</div>
