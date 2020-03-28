@@ -6,7 +6,7 @@ import { FirebaseAuthProviderState } from "@react-firebase/auth/dist/types";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 
 interface FirebaseConfig {
   authDomain: string;
@@ -46,3 +46,34 @@ export const FirebaseProvider: React.FC<{
 };
 
 export const useFireBase = () => useContext(FirebaseContext);
+
+export const fetchCollection = async (name: string, firebase: any) => {
+  const db = firebase.firestore();
+  const collectionRef = await db.collection(name).get();
+  const collection = collectionRef.docs.map((project: any) => {
+    return { id: project.id, ...project.data() };
+  });
+  return collection;
+};
+
+export const useCollection = (name: string) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const { firebase } = useMemo(useFireBase, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const fetchedCollection = await fetchCollection(name, firebase);
+      setData(fetchedCollection);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [firebase, name]);
+
+  return {
+    loading,
+    data
+  };
+};

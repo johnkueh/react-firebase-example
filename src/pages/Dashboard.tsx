@@ -1,7 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { useCollection } from "../lib/data";
-import { useFireBase } from "../lib/useFirebase";
+import { useCollection, useFireBase } from "../lib/useFirebase";
 
 interface Props {}
 
