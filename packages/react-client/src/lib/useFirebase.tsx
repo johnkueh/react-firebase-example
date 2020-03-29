@@ -1,9 +1,4 @@
-import {
-  FirebaseAuthConsumer,
-  FirebaseAuthProvider
-} from "@react-firebase/auth";
-import { FirebaseAuthProviderState } from "@react-firebase/auth/dist/types";
-import firebase from "firebase/app";
+import firebase, { User } from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import React, { useContext, useEffect, useReducer, useState } from "react";
@@ -26,44 +21,54 @@ interface CollectionsMap {
   };
 }
 
-const FirebaseContext = React.createContext<
-  Partial<FirebaseAuthProviderState> & {
-    dispatch: any;
-    collections: Partial<CollectionsMap>;
-  }
->({
-  dispatch: () => {},
+interface FirebaseProps {
+  firebase: any;
+  isSignedIn?: boolean;
+  user?: User;
+  dispatch: any;
+  collections: Partial<CollectionsMap>;
+}
+
+const FirebaseContext = React.createContext<Partial<FirebaseProps>>({
   collections: {}
 });
 
 export const FirebaseProvider: React.FC<{
   config: FirebaseConfig;
 }> = ({ config, children }) => {
+  const [isSignedIn, setIsSignedIn] = useState<Partial<boolean>>();
+  const [user, setUser] = useState<User>();
+  const [firebaseApp, setFirebaseApp] = useState<firebase.app.App>();
   const [collectionsMap, dispatch] = useReducer(reducer, {});
 
-  return (
-    <FirebaseAuthProvider firebase={firebase} {...config}>
-      <FirebaseAuthConsumer>
-        {(firebaseProps: FirebaseAuthProviderState) => {
-          const { providerId } = firebaseProps;
-          // 1. Before/during auth, providerId === null
-          // 2. After auth, providerId === string
-          if (providerId == null) return <div>Loading...</div>;
+  useEffect(() => {
+    const firebaseApp = firebase.initializeApp(config);
+    setFirebaseApp(firebaseApp);
 
-          return (
-            <FirebaseContext.Provider
-              value={{
-                ...firebaseProps,
-                dispatch,
-                collections: collectionsMap
-              }}
-            >
-              {children}
-            </FirebaseContext.Provider>
-          );
-        }}
-      </FirebaseAuthConsumer>
-    </FirebaseAuthProvider>
+    firebaseApp.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        setUser(user);
+        setIsSignedIn(true);
+      } else {
+        setIsSignedIn(false);
+      }
+    });
+  }, [config]);
+
+  if (isSignedIn == null) return <div>Loading...</div>;
+
+  return (
+    <FirebaseContext.Provider
+      value={{
+        isSignedIn,
+        user,
+        firebase: firebaseApp,
+        dispatch,
+        collections: collectionsMap
+      }}
+    >
+      {children}
+    </FirebaseContext.Provider>
   );
 };
 
@@ -99,7 +104,6 @@ export const useAddDocument = (collection: string) => {
       setLoading(false);
       return data;
     } catch (e) {
-      console.log(e);
       setLoading(false);
     }
   };
@@ -127,7 +131,7 @@ export const useCollection = (name: string) => {
     fetchData();
   }, [firebase, dispatch, name]);
 
-  return collections[name] || { loading: null, data: null };
+  return collections?.[name] || { loading: null, data: null };
 };
 
 type Action =

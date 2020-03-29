@@ -5,7 +5,6 @@
   "proxy": "http://localhost:5000/react-firebase-example-cb711/us-central1",
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
-    "@react-firebase/auth": "^0.2.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",

@@ -39,7 +39,7 @@ import { useForm } from "../lib/useForm";
 interface Props {}
 
 const Signup: React.FC<Props> = () => {
-  const { isSignedIn, firebase } = useFireBase();
+  const { user, firebase } = useFireBase();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { currentValues, handleChange } = useForm({
@@ -47,7 +47,7 @@ const Signup: React.FC<Props> = () => {
     password: ""
   });
 
-  if (isSignedIn) {
+  if (user != null) {
     return <Redirect to="/dashboard" />;
   }
 

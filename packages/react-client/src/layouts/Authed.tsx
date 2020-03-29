@@ -10,8 +10,8 @@ import { useFirebase } from "../lib/useFirebase";
 interface Props {}
 
 const Authed: React.FC<Props> = ({ children }) => {
-  const { user } = useFirebase();
-  const [token, setToken] = useState(null);
+  const { isSignedIn, user } = useFirebase();
+  const [token, setToken] = useState<string>();
   useEffect(() => {
     const getToken = async () => {
       if (user) {
@@ -40,7 +40,7 @@ const Authed: React.FC<Props> = ({ children }) => {
     cache: new InMemoryCache()
   });
 
-  if (user == null) return <Redirect to="/login" />;
+  if (isSignedIn === false) return <Redirect to="/login" />;
   if (token == null) return <div>Loading...</div>;
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;

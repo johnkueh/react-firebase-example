@@ -14,7 +14,7 @@ const Signup: React.FC<Props> = () => {
     password: ""
   });
 
-  if (isSignedIn) {
+  if (isSignedIn === true) {
     return <Redirect to="/dashboard" />;
   }
 
