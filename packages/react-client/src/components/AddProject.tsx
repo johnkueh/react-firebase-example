@@ -1,11 +1,14 @@
+import { useMutation } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 import React from "react";
-import { useAddDocument } from "../lib/useFirebase";
 import { useForm } from "../lib/useForm";
 
 interface Props {}
 
 const AddProject: React.FC<Props> = () => {
-  const { add, loading } = useAddDocument("projects");
+  const [createProject, { loading }] = useMutation(CREATE_PROJECT, {
+    refetchQueries: [{ query: PROJECTS }]
+  });
   const { currentValues, handleChange, reset } = useForm({
     name: "",
     description: ""
@@ -15,7 +18,9 @@ const AddProject: React.FC<Props> = () => {
     <form
       onSubmit={async e => {
         e.preventDefault();
-        await add(currentValues);
+        createProject({
+          variables: { input: currentValues }
+        });
         reset();
       }}
     >
@@ -44,3 +49,23 @@ const AddProject: React.FC<Props> = () => {
 };
 
 export default AddProject;
+
+const CREATE_PROJECT = gql`
+  mutation CreateProject($input: CreateProjectInput!) {
+    createProject(input: $input) {
+      id
+      name
+      description
+    }
+  }
+`;
+
+const PROJECTS = gql`
+  query {
+    projects {
+      id
+      name
+      description
+    }
+  }
+`;
