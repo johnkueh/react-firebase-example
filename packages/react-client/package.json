@@ -1,7 +1,8 @@
 {
-  "name": "react-firebase-example",
+  "name": "react-client",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5000/react-firebase-example-cb711/us-central1",
   "dependencies": {
     "@react-firebase/auth": "^0.2.10",
     "@testing-library/jest-dom": "^4.2.4",

@@ -1,12 +1,13 @@
 {
   "private": true,
   "workspaces": [
-    "packages/react-firebase-example",
-    "packages/cloudfunctions-example"
+    "packages/react-client",
+    "packages/cloudfunctions-api"
   ],
   "scripts": {
-    "start:web": "yarn workspace react-firebase-example start",
-    "start:api": "yarn workspace cloudfunctions-example serve",
-    "watch:api": "yarn workspace cloudfunctions-example watch"
+    "start:web": "yarn workspace react-client start",
+    "start:api": "yarn serve:api & yarn watch:api",
+    "serve:api": "yarn workspace cloudfunctions-api serve",
+    "watch:api": "yarn workspace cloudfunctions-api watch"
   }
 }

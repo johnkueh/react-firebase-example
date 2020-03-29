@@ -17,12 +17,12 @@ pids
 node_modules
 
 # React app
-/packages/react-app/.pnp
-/packages/react-app/.pnp.js
-/packages/react-app/coverage
-/packages/react-app/build
-/packages/react-app/.DS_Store
-/packages/react-app/.env.local
-/packages/react-app/.env.development.local
-/packages/react-app/.env.test.local
-/packages/react-app/.env.production.local
+/packages/react-client/.pnp
+/packages/react-client/.pnp.js
+/packages/react-client/coverage
+/packages/react-client/build
+/packages/react-client/.DS_Store
+/packages/react-client/.env.local
+/packages/react-client/.env.development.local
+/packages/react-client/.env.test.local
+/packages/react-client/.env.production.local

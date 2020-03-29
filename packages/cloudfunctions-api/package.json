@@ -1,5 +1,5 @@
 {
-  "name": "cloudfunctions-example",
+  "name": "cloudfunctions-api",
   "version": "0.1.0",
   "scripts": {
     "watch": "parcel src/functions.ts --target node",
