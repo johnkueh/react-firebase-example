@@ -13,6 +13,7 @@ firebaseAdmin.initializeApp({
 export function graphqlServer() {
   const typeDefs = gql`
     type Project {
+      id: ID
       name: String
       description: String
     }
@@ -20,34 +21,20 @@ export function graphqlServer() {
     type Query {
       projects: [Project]
     }
-
-    type Mutation {
-      verifyToken(token: String!): Boolean
-    }
   `;
-
-  const projects = [
-    {
-      name: "Harry Potter and the Chamber of Secrets",
-      description: "J.K. Rowling"
-    },
-    {
-      name: "Jurassic Park",
-      description: "Michael Crichton"
-    }
-  ];
 
   const resolvers = {
     Query: {
-      projects: () => projects
-    },
-    Mutation: {
-      verifyToken: async (ctx, input) => {
-        const { token } = input;
-        console.log("verifyToken", token);
-        const data = await firebaseAdmin.auth().verifyIdToken(token);
-        console.log(data);
-        return true;
+      projects: async (parent, args, ctx, info) => {
+        // console.log(ctx.user);
+        const collectionRef = firebaseAdmin
+          .firestore()
+          .collection("projects")
+          .get();
+        const collection = (await collectionRef).docs.map((project: any) => {
+          return { id: project.id, ...project.data() };
+        });
+        return collection;
       }
     }
   };
@@ -56,7 +43,15 @@ export function graphqlServer() {
     typeDefs,
     resolvers,
     playground: true,
-    introspection: true
+    introspection: true,
+    context: async ({ req, res }) => {
+      const authHeaders = req.headers.authorization;
+      const token = authHeaders.replace("Bearer ", "");
+      const user = await firebaseAdmin.auth().verifyIdToken(token);
+      return {
+        user
+      };
+    }
   });
 
   const app = express();

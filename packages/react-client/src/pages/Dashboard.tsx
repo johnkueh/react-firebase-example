@@ -1,21 +1,24 @@
+import { useQuery } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import AddProject from "../components/AddProject";
-import { useCollection, useFirebase } from "../lib/useFirebase";
+import { useFirebase } from "../lib/useFirebase";
 
 interface Props {}
 
 const Dashboard: React.FC<Props> = () => {
-  const { firebase } = useFirebase();
-  const { data } = useCollection("projects");
   const history = useHistory();
+  const { firebase } = useFirebase();
+  const { data } = useQuery(PROJECTS);
   if (data == null) return <div>Loading projects...</div>;
+  const { projects } = data;
 
   return (
     <>
       <h3>All projects</h3>
       <div>
-        {data.map((project: any) => (
+        {projects.map((project: any) => (
           <div key={project.id}>
             <div>{project.name}</div>
             <div>{project.description}</div>
@@ -39,3 +42,13 @@ const Dashboard: React.FC<Props> = () => {
 };
 
 export default Dashboard;
+
+const PROJECTS = gql`
+  query {
+    projects {
+      id
+      name
+      description
+    }
+  }
+`;
