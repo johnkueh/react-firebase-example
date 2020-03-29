@@ -9,8 +9,12 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": ["es2016", "esnext.asynciterable"],
+    "strictPropertyInitialization": false
   },
   "compileOnSave": true,
-  "include": ["functions/src"]
+  "include": ["src"]
 }
