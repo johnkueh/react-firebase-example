@@ -7,7 +7,6 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import React, { useContext, useEffect, useReducer, useState } from "react";
-import Authed from "../layouts/Authed";
 
 interface FirebaseConfig {
   authDomain: string;
@@ -59,7 +58,7 @@ export const FirebaseProvider: React.FC<{
                 collections: collectionsMap
               }}
             >
-              <Authed>{children}</Authed>
+              {children}
             </FirebaseContext.Provider>
           );
         }}

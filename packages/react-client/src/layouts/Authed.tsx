@@ -4,6 +4,7 @@ import { ApolloClient } from "apollo-client";
 import { setContext } from "apollo-link-context";
 import { createHttpLink } from "apollo-link-http";
 import React, { useEffect, useState } from "react";
+import { Redirect } from "react-router-dom";
 import { useFirebase } from "../lib/useFirebase";
 
 interface Props {}
@@ -20,8 +21,6 @@ const Authed: React.FC<Props> = ({ children }) => {
     };
     getToken();
   }, [user]);
-
-  if (token == null) return <div>Loading...</div>;
 
   const httpLink = createHttpLink({
     uri: "/api"
@@ -40,6 +39,9 @@ const Authed: React.FC<Props> = ({ children }) => {
     link: authLink.concat(httpLink),
     cache: new InMemoryCache()
   });
+
+  if (user == null) return <Redirect to="/login" />;
+  if (token == null) return <div>Loading...</div>;
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
