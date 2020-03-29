@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "start:web": "yarn workspace react-firebase-example start",
-    "start:api": "yarn workspace cloudfunctions-example serve"
+    "start:api": "yarn workspace cloudfunctions-example serve",
+    "watch:api": "yarn workspace cloudfunctions-example watch"
   }
 }

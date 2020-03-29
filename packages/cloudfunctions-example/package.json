@@ -2,26 +2,35 @@
   "name": "cloudfunctions-example",
   "version": "0.1.0",
   "scripts": {
-    "lint": "tslint --project tsconfig.json",
-    "build": "tsc",
-    "serve": "npm run build && firebase emulators:start --only functions",
-    "shell": "npm run build && firebase functions:shell",
-    "start": "npm run shell",
+    "watch": "parcel src/functions.ts --target node",
+    "build": "parcel build src/functions.ts --target node --detailed-report",
+    "serve": "firebase serve --only functions",
+    "emulator": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "yarn run shell",
+    "predeploy": "yarn build",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
   "engines": {
     "node": "10"
   },
-  "main": "lib/index.js",
+  "main": "dist/functions.js",
   "dependencies": {
+    "apollo-server": "^2.11.0",
+    "apollo-server-cloud-functions": "^2.11.0",
+    "apollo-server-express": "^2.11.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "firebase-admin": "^8.6.0",
-    "firebase-functions": "^3.3.0"
+    "firebase-functions": "^3.3.0",
+    "graphql": "^14.6.0",
+    "parcel-bundler": "^1.12.4"
   },
   "devDependencies": {
+    "firebase-functions-test": "^0.1.6",
     "tslint": "^5.12.0",
-    "typescript": "^3.2.2",
-    "firebase-functions-test": "^0.1.6"
+    "typescript": "^3.2.2"
   },
   "private": true
 }
