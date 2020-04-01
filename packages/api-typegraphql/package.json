@@ -1,5 +1,5 @@
 {
-  "name": "cloudfunctions-api",
+  "name": "api-typegraphql",
   "version": "0.1.0",
   "scripts": {
     "watch": "parcel src/functions.ts --target node",

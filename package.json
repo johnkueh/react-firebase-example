@@ -2,12 +2,12 @@
   "private": true,
   "workspaces": [
     "packages/react-client",
-    "packages/cloudfunctions-api"
+    "packages/api-typegraphql"
   ],
   "scripts": {
     "start:web": "yarn workspace react-client start",
     "start:api": "yarn serve:api & yarn watch:api",
-    "serve:api": "yarn workspace cloudfunctions-api serve",
-    "watch:api": "yarn workspace cloudfunctions-api watch"
+    "serve:api": "yarn workspace api-typegraphql serve",
+    "watch:api": "yarn workspace api-typegraphql watch"
   }
 }
